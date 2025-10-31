@@ -55,5 +55,105 @@ public class LinkedList<T> {
         }
     }
 
+    public T get(int index){
+        if(index >= size){
+            throw new IndexOutOfBoundsException
+                    ("Index " + index + " is out of bounds for a list of size " + size);
+        }
 
+        Node<T> current = head;
+        for(int i=0; i<index; i++){
+            current = current.next;
+        }
+
+        return current.data;
+    }
+    public void set(int index,T value){
+        if(index >= size){
+            throw new IndexOutOfBoundsException
+                    ("Index " + index + " is out of bounds for a list of size " + size);
+        }
+
+        Node<T> current = head;
+        for(int i=0; i<index; i++){
+            current = current.next;
+        }
+
+        current.data = value;
+    }
+
+    public void insert(int index, T value){
+        if(index >= size){
+            throw new IndexOutOfBoundsException
+                    ("Index " + index + " is out of bounds for a list of size " + size);
+        }
+
+        Node<T> current = head;
+        for(int i=0; i<index; i++){
+            current = current.next;
+        }
+
+        Node<T> prev = current.prev;
+        Node<T> newNode = new Node<T>(value);
+        current.prev = newNode;
+        if(prev != null) {
+            prev.next = newNode;
+        }
+        if(index == 0){
+            head = newNode;
+        }
+    }
+
+    public void remove(int index){
+        if(index >= size){
+            throw new IndexOutOfBoundsException
+                    ("Index " + index + " is out of bounds for a list of size " + size);
+        }
+
+        Node<T> current = head;
+        for(int i=0; i<index; i++){
+            current = current.next;
+        }
+
+        Node<T> prev = current.prev;
+        Node<T> next = current.next;
+        if(prev != null) {
+            prev.next = next;
+        }
+        if(next != null){
+            next.prev = prev;
+        }
+        if(index == 0){
+            head = next;
+        }
+    }
+
+    public void removeFirstOcurrence(T object){
+        Node<T> current = head;
+        int index = 0;
+        while(current != null){
+            if(current.data == object){
+                remove(index);
+                return;
+            }
+            else{
+                current = current.next;
+                index++;
+            }
+        }
+    }
+    public void removeLastOcurrence(T object){
+        Node<T> current = tail;
+        int index = size-1;
+        while(current != null){
+            if(current.data == object){
+                remove(index);
+                return;
+            }
+            else{
+                current = current.prev;
+                index--;
+            }
+        }
+    }
 }
