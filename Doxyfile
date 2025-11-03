@@ -1,0 +1,11 @@
+PROJECT_NAME           = "Linked List Implementation"
+PROJECT_BRIEF          = "A generic doubly linked list implementation in Java"
+OUTPUT_DIRECTORY       = docs
+INPUT                  = .
+FILE_PATTERNS          = *.java
+RECURSIVE              = YES
+GENERATE_LATEX         = NO
+GENERATE_HTML          = YES
+JAVADOC_AUTOBRIEF      = YES
+QT_AUTOBRIEF           = YES
+ALIASES                = "complexity=\par Complexity:\n"
