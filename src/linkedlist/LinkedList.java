@@ -1,7 +1,7 @@
 package linkedlist;
 import java.lang.reflect.Array;
 import java.util.Iterator;
-import  java.util.NoSuchElementException;
+import java.util.NoSuchElementException;
 
 public class LinkedList<T> implements Iterable<T>{
     private Node<T> head;
@@ -18,13 +18,14 @@ public class LinkedList<T> implements Iterable<T>{
         if(size == 0){
             head = new Node<T>(data);
             tail = head;
+        } else {
+            tail.next = new Node<T>(data);
+            tail.next.prev = tail;
+            tail = tail.next;
         }
-
-        tail.next = new Node<T>(data);
-        tail.next.prev = tail;
-        tail = tail.next;
         size++;
     }
+
     public void pushFront(T data){
         Node<T> newHead = new Node<T>(data);
         newHead.next = head;
@@ -44,22 +45,27 @@ public class LinkedList<T> implements Iterable<T>{
             tail = tail.prev;
             if(tail != null){
                 tail.next = null;
+            } else {
+                head = null;
             }
             size--;
         }
     }
+
     public void popFront(){
         if(size > 0){
             head = head.next;
             if(head != null){
                 head.prev = null;
+            } else {
+                tail = null;
             }
             size--;
         }
     }
 
     public T get(int index){
-        if(index >= size){
+        if(index < 0 || index >= size){
             throw new IndexOutOfBoundsException
                     ("Index " + index + " is out of bounds for a list of size " + size);
         }
@@ -71,8 +77,9 @@ public class LinkedList<T> implements Iterable<T>{
 
         return current.data;
     }
+
     public void set(int index,T value){
-        if(index >= size){
+        if(index < 0 || index >= size){
             throw new IndexOutOfBoundsException
                     ("Index " + index + " is out of bounds for a list of size " + size);
         }
@@ -86,9 +93,14 @@ public class LinkedList<T> implements Iterable<T>{
     }
 
     public void insert(int index, T value){
-        if(index >= size){
+        if(index < 0 || index >= size){
             throw new IndexOutOfBoundsException
                     ("Index " + index + " is out of bounds for a list of size " + size);
+        }
+
+        if(index == 0) {
+            pushFront(value);
+            return;
         }
 
         Node<T> current = head;
@@ -96,21 +108,31 @@ public class LinkedList<T> implements Iterable<T>{
             current = current.next;
         }
 
-        Node<T> prev = current.prev;
         Node<T> newNode = new Node<T>(value);
+        Node<T> prev = current.prev;
+
+        newNode.prev = prev;
+        newNode.next = current;
+        prev.next = newNode;
         current.prev = newNode;
-        if(prev != null) {
-            prev.next = newNode;
-        }
-        if(index == 0){
-            head = newNode;
-        }
+
+        size++;
     }
 
     public void remove(int index){
-        if(index >= size){
+        if(index < 0 || index >= size){
             throw new IndexOutOfBoundsException
                     ("Index " + index + " is out of bounds for a list of size " + size);
+        }
+
+        if(index == 0) {
+            popFront();
+            return;
+        }
+
+        if(index == size - 1) {
+            popBack();
+            return;
         }
 
         Node<T> current = head;
@@ -120,50 +142,46 @@ public class LinkedList<T> implements Iterable<T>{
 
         Node<T> prev = current.prev;
         Node<T> next = current.next;
-        if(prev != null) {
-            prev.next = next;
-        }
-        if(next != null){
-            next.prev = prev;
-        }
-        if(index == 0){
-            head = next;
-        }
+
+        prev.next = next;
+        next.prev = prev;
+
+        size--;
     }
 
     public void removeFirstOcurrence(T object){
         Node<T> current = head;
         int index = 0;
         while(current != null){
-            if(current.data == object){
+            if(current.data.equals(object)){
                 remove(index);
                 return;
             }
-            else{
-                current = current.next;
-                index++;
-            }
+            current = current.next;
+            index++;
         }
     }
+
     public void removeLastOcurrence(T object){
         Node<T> current = tail;
         int index = size-1;
         while(current != null){
-            if(current.data == object){
+            if(current.data.equals(object)){
                 remove(index);
                 return;
             }
-            else{
-                current = current.prev;
-                index--;
-            }
+            current = current.prev;
+            index--;
         }
     }
 
     public T getFirst(){
+        if(head == null) throw new NoSuchElementException("List is empty");
         return head.data;
     }
+
     public T getLast(){
+        if(tail == null) throw new NoSuchElementException("List is empty");
         return tail.data;
     }
 
@@ -171,61 +189,54 @@ public class LinkedList<T> implements Iterable<T>{
         Node<T> current = head;
         int index = 0;
         while(current != null){
-            if(current.data == object){
+            if(current.data.equals(object)){ // CORREÇÃO: usar equals
                 return index;
             }
-            else {
-                current = current.next;
-            }
+            current = current.next;
+            index++;
         }
-
         return -1;
     }
+
     public int findLastOcurrence(T object){
         Node<T> current = tail;
         int index = size-1;
         while(current != null){
-            if(current.data == object){
+            if(current.data.equals(object)){ // CORREÇÃO: usar equals
                 return index;
             }
-            else {
-                current = current.prev;
-            }
+            current = current.prev;
+            index--;
         }
-
         return -1;
     }
 
     public boolean contains(T object){
         Node<T> current = head;
         while(current != null){
-            if(current.data == object){
+            if(current.data.equals(object)){ // CORREÇÃO: usar equals
                 return true;
             }
-            else{
-                current = current.next;
-            }
+            current = current.next;
         }
-
         return false;
     }
+
     public boolean isEmpty(){
-        if(size == 0){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return size == 0;
     }
 
     public void clear(){
         head = null;
         tail = null;
+        size = 0; // CORREÇÃO: Zerar o size
     }
+
     public int size(){
         return size;
     }
-    @SuppressWarnings("unchecked cast")
+
+    @SuppressWarnings("unchecked")
     public T[] toArray(T[] a){
         if(a.length < size){
             a = (T[]) Array.newInstance(a.getClass().getComponentType(), size);
@@ -238,23 +249,27 @@ public class LinkedList<T> implements Iterable<T>{
             current = current.next;
         }
 
+        while(i < a.length){
+            a[i++] = null;
+        }
+
         return a;
     }
 
     public void reverse(){
+        if(size <= 1) return;
+
         Node<T> current = head;
-        Node<T> next = current.next;
+        Node<T> temp = null;
 
+        head = tail;
         tail = current;
-        while(current != null){
-            current.next = current.prev;
-            current.prev = next;
 
-            current = next;
-            if(next != null){
-                next = next.next;
-                head = current;
-            }
+        while(current != null){
+            temp = current.prev;
+            current.prev = current.next;
+            current.next = temp;
+            current = current.prev;
         }
     }
 
@@ -262,6 +277,7 @@ public class LinkedList<T> implements Iterable<T>{
     public Iterator<T> iterator() {
         return new LinkedListIterator();
     }
+
     private class LinkedListIterator implements Iterator<T> {
         private Node<T> current;
 
