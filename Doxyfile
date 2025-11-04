@@ -4,8 +4,10 @@ OUTPUT_DIRECTORY       = docs
 INPUT                  = .
 FILE_PATTERNS          = *.java
 RECURSIVE              = YES
-GENERATE_LATEX         = NO
-GENERATE_HTML          = YES
+GENERATE_LATEX         = YES
+GENERATE_HTML          = NO
+USE_PDFLATEX = YES
+LATEX_OUTPUT = latex
 JAVADOC_AUTOBRIEF      = YES
 QT_AUTOBRIEF           = YES
 ALIASES                = "complexity=\par Complexity:\n"
